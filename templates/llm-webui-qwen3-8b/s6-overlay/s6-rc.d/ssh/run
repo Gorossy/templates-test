@@ -1,0 +1,14 @@
+#!/command/with-contenv bash
+set -e
+echo "=== Starting SSH service ==="
+
+mkdir -p /var/run/sshd
+
+if [ ! -f /usr/sbin/sshd ]; then
+    echo "ERROR: sshd not installed"
+    exit 1
+fi
+
+echo "SSH configuration OK. Starting daemon..."
+
+exec /usr/sbin/sshd -D -e

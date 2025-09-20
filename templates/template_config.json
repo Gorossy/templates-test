@@ -1,0 +1,100 @@
+{
+  "templates": {
+    "default": {
+      "name": "PyTorch + SSH",
+      "description": "PyTorch with CUDA support and SSH access",
+      "image": "ivanneural/sn27-direct-ssh",
+      "size": "4GB",
+      "use_case": "General ML/AI development with PyTorch",
+      "directory": "default_image"
+    },
+    "datascience": {
+      "name": "Data Science Stack",
+      "description": "Jupyter with Python, R, and Julia for data analysis",
+      "image": "jupyter/datascience-notebook",
+      "size": "2.5GB",
+      "use_case": "Data analysis and interactive notebooks",
+      "directory": "datascience"
+    },
+    "ollama": {
+      "name": "LLM Serving - Ollama",
+      "description": "Ollama server for serving large language models",
+      "image": "ollama/ollama",
+      "size": "1.5GB",
+      "use_case": "Local LLM serving and inference",
+      "directory": "ollama"
+    },
+    "tensorflow": {
+      "name": "TensorFlow Serving",
+      "description": "TensorFlow Serving for model deployment",
+      "image": "tensorflow/serving",
+      "size": "500MB",
+      "use_case": "Production TensorFlow model serving",
+      "directory": "tensorflow"
+    },
+    "scientific": {
+      "name": "Scientific Computing",
+      "description": "Miniconda with scientific Python stack",
+      "image": "continuumio/miniconda3",
+      "size": "500MB",
+      "use_case": "Scientific computing and custom environments",
+      "directory": "scientific"
+    },
+    "pytorch-dev": {
+      "name": "PyTorch Development",
+      "description": "PyTorch with CUDA development tools",
+      "image": "pytorch/pytorch:2.7.1-cuda12.8-cudnn9-devel",
+      "size": "3GB",
+      "use_case": "Advanced PyTorch model development",
+      "directory": "pytorch-dev"
+    },
+    "mlops": {
+      "name": "MLOps & Monitoring",
+      "description": "Lightweight Python with MLflow and monitoring tools",
+      "image": "python:3.11-slim",
+      "size": "200MB + deps",
+      "use_case": "MLOps, experiment tracking, and monitoring",
+      "directory": "mlops"
+    },
+    "comfyui": {
+      "name": "ComfyUI",
+      "description": "ComfyUI interface for Stable Diffusion workflows",
+      "image": "python:3.10-slim",
+      "size": "2GB",
+      "use_case": "Visual workflow Stable Diffusion interface",
+      "directory": "comfyui"
+    },
+    "jupyter-ready": {
+      "name": "JupyterLab GPU",
+      "description": "JupyterLab with GPU-optimized ML packages",
+      "image": "pytorch/pytorch:2.7.1-cuda12.8-cudnn9-runtime",
+      "size": "3GB",
+      "use_case": "Interactive ML development with GPU support",
+      "directory": "jupyter-ready"
+    },
+    "automatic1111": {
+      "name": "Automatic1111 WebUI",
+      "description": "Stable Diffusion WebUI with full features",
+      "image": "python:3.10-slim",
+      "size": "2.5GB",
+      "use_case": "Professional Stable Diffusion image generation",
+      "directory": "automatic1111"
+    },
+    "vscode-web": {
+      "name": "VS Code Web",
+      "description": "VS Code in browser with ML/AI extensions",
+      "image": "codercom/code-server",
+      "size": "2GB",
+      "use_case": "Full IDE development environment in browser",
+      "directory": "vscode-web"
+    },
+    "oobabooga": {
+      "name": "Text Generation WebUI",
+      "description": "Oobabooga interface for local LLM interaction",
+      "image": "python:3.11-slim",
+      "size": "1.5GB",
+      "use_case": "Local LLM chat and text generation interface",
+      "directory": "oobabooga"
+    }
+  }
+}
