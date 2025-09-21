@@ -1,31 +1,9 @@
-FROM python:3.10-slim
+FROM ghcr.io/ai-dock/stable-diffusion-webui:latest
 
-# Automatic1111 Stable Diffusion WebUI with SSH
-
-# Prevent interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install SSH server and necessary packages
+# Install SSH server
+USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-server \
-    openssh-client \
-    sudo \
-    curl \
-    wget \
-    git \
-    build-essential \
-    python3-dev \
-    libgl1-mesa-dri \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libgomp1 \
-    libglu1-mesa \
-    libxrender1 \
-    libxext6 \
-    libsm6 \
-    libxrandr2 \
-    libfontconfig1 \
-    libice6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -39,29 +17,12 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Clone Automatic1111 WebUI
-WORKDIR /app
-RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git . && \
-    pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# Create startup script that starts SSH and the original service
+RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\n# Start the original AI-Dock service\nexec /opt/ai-dock/bin/supervisor.sh' > /start.sh && chmod +x /start.sh
 
-# Install core dependencies
-RUN pip install --no-cache-dir \
-    transformers \
-    accelerate \
-    diffusers \
-    xformers \
-    clip \
-    open-clip-torch \
-    opencv-python \
-    Pillow \
-    requests \
-    tqdm
-
-# Create directories for models
-RUN mkdir -p models/Stable-diffusion models/VAE models/ESRGAN models/GFPGAN models/RealESRGAN models/LDSR models/Lora models/ControlNet
-
-# Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\ncd /app\npython launch.py --listen --port 27015 --api --no-half-vae --xformers --enable-insecure-extension-access &\necho "Automatic1111 WebUI started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+# Set environment variables for WebUI to listen on port 27015
+ENV WEBUI_PORT=27015
+ENV WEBUI_FLAGS="--listen --port 27015 --api --enable-insecure-extension-access"
 
 EXPOSE 22 27015
 
