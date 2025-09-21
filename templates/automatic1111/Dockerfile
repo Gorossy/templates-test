@@ -21,9 +21,13 @@ RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /r
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Set environment variables for WebUI to listen on port 27015
+# Disable ai-dock authentication and set direct access
+ENV DIRECT_ADDRESS=0.0.0.0
+ENV DIRECT_ADDRESS_GET_WAN=false
+ENV WEB_ENABLE_AUTH=false
+ENV AUTO_UPDATE=false
 ENV WEBUI_PORT=27015
-ENV WEBUI_FLAGS="--listen --port 27015 --api --enable-insecure-extension-access"
+ENV WEBUI_FLAGS="--listen --port 27015 --api --enable-insecure-extension-access --no-gradio-queue"
 
 EXPOSE 22 27015
 

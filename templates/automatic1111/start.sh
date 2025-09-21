@@ -1,27 +1,26 @@
 #!/bin/bash
 
 # Start SSH server in background
-service ssh start
+service ssh start &
 echo "SSH server started on port 22"
 
-# Set environment variables for Stable Diffusion WebUI
-export WEBUI_FLAGS="--listen --port 27015 --api --enable-insecure-extension-access --no-half-vae"
-export AUTO_LAUNCH_BROWSER="False"
-export CLI_ARGS="--listen --port 27015 --api --enable-insecure-extension-access --no-half-vae"
+# Set ai-dock environment variables to disable auth
+export WEB_ENABLE_AUTH=false
+export DIRECT_ADDRESS=0.0.0.0
+export DIRECT_ADDRESS_GET_WAN=false
+export AUTO_UPDATE=false
 
-echo "Starting Automatic1111 WebUI on port 27015..."
+# Set WebUI specific variables
+export WEBUI_PORT=27015
+export WEBUI_FLAGS="--listen --port 27015 --api --enable-insecure-extension-access --no-gradio-queue"
 
-# Try to find the webui directory and launch
-if [ -d "/opt/stable-diffusion-webui" ]; then
-    cd /opt/stable-diffusion-webui
-    python webui.py $CLI_ARGS
-elif [ -d "/workspace/stable-diffusion-webui" ]; then
-    cd /workspace/stable-diffusion-webui
-    python webui.py $CLI_ARGS
-elif [ -d "/app/stable-diffusion-webui" ]; then
-    cd /app/stable-diffusion-webui
-    python webui.py $CLI_ARGS
+echo "Starting ai-dock with Automatic1111 WebUI on port 27015..."
+
+# Execute the original ai-dock init script with our environment
+if [ -f /opt/ai-dock/bin/init.sh ]; then
+    exec /opt/ai-dock/bin/init.sh
 else
-    echo "Could not find stable-diffusion-webui installation"
-    tail -f /dev/null
+    echo "ai-dock init script not found, starting WebUI directly..."
+    cd /opt/stable-diffusion-webui 2>/dev/null || cd /workspace/stable-diffusion-webui 2>/dev/null || cd /app
+    exec python webui.py --listen --port 27015 --api --enable-insecure-extension-access --no-gradio-queue
 fi
