@@ -34,7 +34,7 @@ RUN mkdir -p /var/run/sshd && \
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
 # Install PyTorch and ML packages
-RUN pip3 install --no-cache-dir \
+RUN pip3 install --no-cache-dir --break-system-packages \
     torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
     transformers \
     accelerate \
