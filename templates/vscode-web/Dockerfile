@@ -58,11 +58,9 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     requests \
     tqdm
 
-# Install VS Code extensions
+# Install VS Code extensions (only available ones)
 RUN code-server --install-extension ms-python.python \
     --install-extension ms-toolsai.jupyter \
-    --install-extension ms-vscode.cpptools \
-    --install-extension GitHub.copilot \
     --install-extension ms-python.pylint \
     --install-extension ms-python.black-formatter
 
