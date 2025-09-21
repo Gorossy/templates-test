@@ -17,8 +17,9 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Create startup script that starts SSH and the original service
-RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\n# Start the original AI-Dock service\nexec /opt/ai-dock/bin/supervisor.sh' > /start.sh && chmod +x /start.sh
+# Copy startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 # Set environment variables for WebUI to listen on port 27015
 ENV WEBUI_PORT=27015
