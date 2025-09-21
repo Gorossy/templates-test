@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     git \
     build-essential \
+    nodejs \
+    npm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -53,8 +55,8 @@ RUN pip install --no-cache-dir \
     tqdm \
     requests
 
-# Install JupyterLab extensions
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+# Install JupyterLab extensions (using modern approach)
+RUN pip install --no-cache-dir jupyterlab-widgets
 
 # Create startup script
 RUN echo '#!/bin/bash\nservice ssh start\ncd /app\njupyter lab --ip=0.0.0.0 --port=27015 --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" &\necho "JupyterLab started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
