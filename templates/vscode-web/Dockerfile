@@ -65,7 +65,7 @@ RUN code-server --install-extension ms-python.python \
     --install-extension ms-python.black-formatter
 
 # Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\ncd /app\ncode-server --bind-addr 0.0.0.0:27015 --auth none --disable-telemetry &\necho "VS Code Server started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+RUN echo '#!/bin/bash\nservice ssh start\ncd /app\necho "Starting VS Code Server on port 27015..."\ncode-server --bind-addr 0.0.0.0:27015 --auth none --disable-telemetry --disable-update-check &\necho "VS Code Server started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
 
 WORKDIR /app
 
