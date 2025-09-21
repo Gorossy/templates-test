@@ -16,8 +16,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
     libgl1-mesa-dri \
+    libgl1-mesa-glx \
     libglib2.0-0 \
     libgomp1 \
+    libglu1-mesa \
+    libxrender1 \
+    libxext6 \
+    libsm6 \
+    libxrandr2 \
+    libfontconfig1 \
+    libice6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
