@@ -15,17 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     build-essential \
     python3-dev \
-    libgl1-mesa-dri \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libgomp1 \
-    libglu1-mesa \
-    libxrender1 \
-    libxext6 \
-    libsm6 \
-    libxrandr2 \
-    libfontconfig1 \
-    libice6 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -52,7 +44,7 @@ RUN pip install --no-cache-dir \
     xformers \
     clip \
     open-clip-torch \
-    opencv-python \
+    opencv-python-headless \
     Pillow \
     requests \
     tqdm
@@ -61,7 +53,7 @@ RUN pip install --no-cache-dir \
 RUN mkdir -p models/Stable-diffusion models/VAE models/ESRGAN models/GFPGAN models/RealESRGAN models/LDSR models/Lora models/ControlNet
 
 # Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\ncd /app\necho "Starting Automatic1111 WebUI on port 27015..."\npython launch.py --listen --port 27015 --api --no-half-vae --xformers --enable-insecure-extension-access &\necho "Automatic1111 WebUI started on port 27015"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\ncd /app\necho "Starting Automatic1111 WebUI on port 27015..."\npython launch.py --listen --port 27015 --api --no-half-vae --xformers --enable-insecure-extension-access' > /start.sh && chmod +x /start.sh
 
 EXPOSE 22 27015
 
