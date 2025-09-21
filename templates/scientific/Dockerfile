@@ -58,5 +58,8 @@ WORKDIR /app
 
 EXPOSE 22 27015
 
-# Default command: SSH daemon
-CMD ["/usr/sbin/sshd", "-D"]
+# Create startup script
+RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\necho "Scientific computing environment ready"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+
+# Default command: startup script
+CMD ["/start.sh"]
