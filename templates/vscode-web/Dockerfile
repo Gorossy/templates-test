@@ -58,14 +58,15 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     requests \
     tqdm
 
-# Install VS Code extensions (only available ones)
-RUN code-server --install-extension ms-python.python \
+# Remove default config file and install extensions
+RUN rm -f /root/.config/code-server/config.yaml && \
+    code-server --install-extension ms-python.python \
     --install-extension ms-toolsai.jupyter \
     --install-extension ms-python.pylint \
     --install-extension ms-python.black-formatter
 
 # Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\ncd /app\necho "Starting VS Code Server on port 27015..."\ncode-server --bind-addr 0.0.0.0:27015 --auth none --disable-telemetry --disable-update-check &\necho "VS Code Server started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+RUN echo '#!/bin/bash\nservice ssh start\ncd /app\necho "Starting VS Code Server on port 27015..."\nrm -f /root/.config/code-server/config.yaml\nexport PASSWORD=""\ncode-server --bind-addr 0.0.0.0:27015 --auth none --disable-telemetry --disable-update-check &\necho "VS Code Server started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
 
 WORKDIR /app
 
