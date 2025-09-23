@@ -27,20 +27,16 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Install MLOps and monitoring packages
+# Install MLOps and monitoring packages (simplified for compatibility)
 RUN pip install --no-cache-dir \
     mlflow \
     wandb \
     neptune-client \
     dvc \
-    prefect \
-    airflow \
     fastapi \
     uvicorn \
     prometheus-client \
-    grafana-api \
     docker \
-    kubernetes \
     streamlit \
     dash \
     plotly \

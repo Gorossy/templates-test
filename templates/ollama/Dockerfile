@@ -29,20 +29,17 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Install Python packages for LLM interaction
-RUN pip3 install --no-cache-dir \
+# Install Python packages for LLM interaction (simplified)
+RUN pip3 install --break-system-packages --no-cache-dir \
     requests \
     fastapi \
-    uvicorn \
-    openai \
-    langchain \
-    streamlit
+    uvicorn
 
 # Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\nollama serve &\nsleep 5\necho "Ollama server started on port 11434"\necho "SSH server started on port 22"\necho "Main service available on port 27015"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+RUN echo '#!/bin/bash\nservice ssh start\nOLLAMA_HOST=0.0.0.0:27015 ollama serve &\nsleep 5\necho "Ollama server started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
 
 WORKDIR /app
 
-EXPOSE 22 11434 27015
+EXPOSE 22 27015
 
-CMD ["/start.sh"]
+ENTRYPOINT ["/start.sh"]

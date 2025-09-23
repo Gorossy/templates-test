@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  jupyter-ready:
+    build: .
+    container_name: jupyter-ready-container
+    ports:
+      - "4444:22"
+      - "27015:27015"
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

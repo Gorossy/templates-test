@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     build-essential \
     python3-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -33,14 +33,15 @@ RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /r
 # Clone ComfyUI
 WORKDIR /app
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git . && \
-    pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 && \
+    pip install --no-cache-dir "numpy<2.0" && \
+    pip install --no-cache-dir torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121 && \
     pip install --no-cache-dir -r requirements.txt
 
-# Install additional dependencies
+# Install additional dependencies with compatible versions
 RUN pip install --no-cache-dir \
-    xformers \
+    xformers==0.0.23.post1 \
     accelerate \
-    transformers \
+    "transformers<4.45" \
     diffusers
 
 # Create startup script
