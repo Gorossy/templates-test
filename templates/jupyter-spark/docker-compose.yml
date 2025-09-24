@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  jupyter-spark:
+    build: .
+    container_name: jupyter-spark-container
+    ports:
+      - "4444:22"
+      - "27015:27015"
+      - "4040:4040"  # Spark UI
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./work:/home/jovyan/work
+    shm_size: '2gb'  # Shared memory for Spark

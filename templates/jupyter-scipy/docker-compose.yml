@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  jupyter-scipy:
+    build: .
+    container_name: jupyter-scipy-container
+    ports:
+      - "4444:22"
+      - "27015:27015"
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./work:/home/jovyan/work

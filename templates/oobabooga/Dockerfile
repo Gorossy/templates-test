@@ -33,8 +33,8 @@ WORKDIR /app
 RUN git clone https://github.com/oobabooga/text-generation-webui.git . && \
     pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# Install requirements
-RUN pip install --no-cache-dir -r requirements.txt
+# Install requirements (check if file exists, install manually if not)
+RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi
 
 # Install additional packages
 RUN pip install --no-cache-dir \
@@ -46,13 +46,17 @@ RUN pip install --no-cache-dir \
     trl \
     scipy \
     gradio \
-    requests
+    requests \
+    markdown \
+    matplotlib \
+    sse-starlette \
+    tiktoken
 
 # Create models directory
 RUN mkdir -p models loras training/datasets training/formats characters instruction-templates
 
-# Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\ncd /app\npython server.py --listen --listen-host 0.0.0.0 --listen-port 27015 --api --nowebui &\nsleep 5\npython server.py --listen --listen-host 0.0.0.0 --listen-port 27015 &\necho "Oobabooga WebUI started on port 27015"\necho "SSH server started on port 22"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+# Create startup script with optimized settings
+RUN echo '#!/bin/bash\nservice ssh start\ncd /app\n# Start with optimized parameters for production (API-only mode)\npython server.py \\\n  --listen \\\n  --listen-host 0.0.0.0 \\\n  --listen-port 27015 \\\n  --api \\\n  --old-colors \\\n  --model-dir /app/models \\\n  --verbose &\necho "Oobabooga Text Generation API started with WebUI"\necho "API and WebUI available on port 27015"\necho "SSH server available on port 22"\necho "Place models in /app/models/"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
 
 EXPOSE 22 27015
 

@@ -1,7 +1,9 @@
+version: '3.8'
+
 services:
-  oobabooga:
+  jupyter-tensorflow:
     build: .
-    container_name: oobabooga-container
+    container_name: jupyter-tensorflow-container
     ports:
       - "4444:22"
       - "27015:27015"
@@ -17,3 +19,5 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
+    volumes:
+      - ./work:/home/jovyan/work
