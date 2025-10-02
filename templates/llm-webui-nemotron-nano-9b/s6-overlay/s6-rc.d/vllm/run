@@ -39,4 +39,5 @@ exec vllm serve "$VLLM_MODEL" \
     --host "$VLLM_HOST" \
     --port "$VLLM_PORT" \
     --gpu-memory-utilization "$VLLM_GPU_MEMORY_UTILIZATION" \
-    --tensor-parallel-size "${VLLM_TENSOR_PARALLEL_SIZE:-1}"
+    --tensor-parallel-size "${VLLM_TENSOR_PARALLEL_SIZE:-1}" \
+    --trust-remote-code
