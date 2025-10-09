@@ -1,12 +1,14 @@
-FROM jupyter/all-spark-notebook:latest
+FROM quay.io/jupyter/all-spark-notebook:latest
 
-# Switch to root to install SSH
+# Apache Spark with JupyterLab and SSH
 USER root
 
-# Install SSH server and supervisor
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install SSH server
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openssh-server \
-    supervisor \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -20,11 +22,15 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Create supervisord config
-RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Create startup script that works with Jupyter's entrypoint
+RUN echo '#!/bin/bash\nservice ssh start' > /usr/local/bin/before-notebook.d/start-ssh.sh && \
+    chmod +x /usr/local/bin/before-notebook.d/start-ssh.sh
+
+# Set default Jupyter token (users should change this)
+ENV JUPYTER_TOKEN=nodexo2025
 
 # Expose ports
 EXPOSE 22 27015 4040
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Use default Jupyter CMD but override port and use token from env
+CMD ["start-notebook.py", "--ip=0.0.0.0", "--port=27015", "--no-browser"]
