@@ -26,8 +26,11 @@ RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /r
 RUN echo '#!/bin/bash\nservice ssh start' > /usr/local/bin/before-notebook.d/start-ssh.sh && \
     chmod +x /usr/local/bin/before-notebook.d/start-ssh.sh
 
+# Set default Jupyter token (users should change this)
+ENV JUPYTER_TOKEN=nodexo2025
+
 # Expose ports
 EXPOSE 22 27015
 
-# Use default Jupyter CMD but override port
-CMD ["start-notebook.py", "--ip=0.0.0.0", "--port=27015", "--no-browser", "--NotebookApp.token=", "--NotebookApp.password="]
+# Use default Jupyter CMD but override port and use token from env
+CMD ["start-notebook.py", "--ip=0.0.0.0", "--port=27015", "--no-browser"]
