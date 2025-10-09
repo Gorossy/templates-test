@@ -1,6 +1,6 @@
-FROM jupyter/datascience-notebook:latest
+FROM quay.io/jupyter/pytorch-notebook:cuda12-latest
 
-# Data Science Stack with SSH
+# Data Science Stack with GPU and SSH
 USER root
 
 # Prevent interactive prompts during package installation
@@ -28,7 +28,7 @@ RUN mkdir -p /var/run/sshd && \
 # SSH access files (empty authorized_keys)
 RUN mkdir -p /root/.ssh/ && echo '' > /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys
 
-# Install additional data science packages
+# Install additional data science packages (Python, R support, Julia, etc.)
 RUN pip install --no-cache-dir \
     plotly \
     seaborn \
@@ -38,11 +38,21 @@ RUN pip install --no-cache-dir \
     dask[complete] \
     streamlit \
     fastapi \
-    uvicorn
+    uvicorn \
+    scipy \
+    sympy \
+    statsmodels \
+    beautifulsoup4 \
+    sqlalchemy \
+    h5py
+
+# Create startup script that works with Jupyter's entrypoint
+RUN echo '#!/bin/bash\nservice ssh start' > /usr/local/bin/before-notebook.d/start-ssh.sh && \
+    chmod +x /usr/local/bin/before-notebook.d/start-ssh.sh
 
 WORKDIR /app
 
-EXPOSE 22 27015 8888
+EXPOSE 22 27015
 
-# Start SSH daemon and Jupyter
-CMD service ssh start && jupyter lab --ip=0.0.0.0 --port=27015 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+# Use default Jupyter CMD but override port
+CMD ["start-notebook.py", "--ip=0.0.0.0", "--port=27015", "--no-browser", "--NotebookApp.token=", "--NotebookApp.password="]
