@@ -58,8 +58,18 @@ WORKDIR /app
 
 EXPOSE 22 27015
 
-# Create startup script
-RUN echo '#!/bin/bash\nservice ssh start\necho "SSH server started on port 22"\necho "Scientific computing environment ready"\ntail -f /dev/null' > /start.sh && chmod +x /start.sh
+# Ensure /app directory has write permissions
+RUN chmod 777 /app
+
+# Create startup script with Jupyter
+RUN echo '#!/bin/bash\n\
+service ssh start\n\
+echo "SSH server started on port 22"\n\
+echo "Starting Jupyter Lab on port 27015..."\n\
+jupyter lab --ip=0.0.0.0 --port=27015 --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" &\n\
+echo "Scientific computing environment ready"\n\
+echo "Jupyter Lab available at http://localhost:27015"\n\
+tail -f /dev/null' > /start.sh && chmod +x /start.sh
 
 # Default command: startup script
 CMD ["/start.sh"]
