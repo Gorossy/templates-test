@@ -19,5 +19,3 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
-    volumes:
-      - ./work:/home/jovyan/work
