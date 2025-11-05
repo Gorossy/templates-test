@@ -53,8 +53,6 @@ RUN echo '#!/bin/bash\nservice ssh start' > /usr/local/bin/before-notebook.d/sta
 # Set default Jupyter token (users should change this)
 ENV JUPYTER_TOKEN=nodexo2025
 
-WORKDIR /app
-
 EXPOSE 22 27015
 
 # Use default Jupyter CMD but override port and use token from env
